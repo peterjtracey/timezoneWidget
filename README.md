@@ -4,3 +4,5 @@ This is a jQuery plugin with corresponding server code (currently PHP only) whic
 It depends on the [Chosen](https://harvesthq.github.io/chosen/ "Chosen jQuery autocomplete plugin") jQuery plugin to make selecting the right timezone very easy.
 
 It is designed to be very simple and intuitive, an emphasis has been made to make it especially useful to users in the United States. However, it is very easy to find any timezone in the world.
+
+In lieu of a demo a screenshot is included in the root of the repository.
