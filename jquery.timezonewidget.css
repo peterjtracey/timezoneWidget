@@ -1,0 +1,9 @@
+
+.tzwidget .tz_timezone_container {
+	width: 70%;
+	float: right;
+}
+
+.tzwidget .tz_region_select {
+	overflow-y: hidden;
+}
