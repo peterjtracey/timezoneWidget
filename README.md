@@ -1,2 +1,2 @@
 # timezoneWidget
-jQuery timezone widget connecting with timezone data from PHP/others
+This is a jQuery plugin with corresponding server code (currently PHP only) which draws a timezone selection widget. The javascript code is around 100 lines, the server class in PHP is around 150 including generating the JSON timezone data, validating submitted timezones, and a helper to get a region for a timezone name (from the DateTimeZone PHP class). 
