@@ -1,6 +1,6 @@
 <?php
 
-class TimezoneHelper {
+class TimezoneWidget {
 
     const TZ_REGIONS = array(
         \DateTimeZone::AFRICA => "Africa",
@@ -148,5 +148,5 @@ class TimezoneHelper {
         return false;
     }
 	
-	
+
 }
