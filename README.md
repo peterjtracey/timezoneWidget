@@ -7,7 +7,7 @@ It is designed to be very simple and intuitive, an emphasis has been made to mak
 
 In lieu of a demo a screenshot is included in the root of the repository.
 
-## H2 Usage
+## Usage
 
 Include the JavaScript, CSS, Chosen plugin on a page (plugin must come after jQuery). The data structure can be seen in the PHP file, if not using PHP an equivilant data structure must be generated. Internationalization can be added since the labels of the select all come from the JSON data. The PHP class's timezoneValues() method can be passed to the built-in json_encode function or otherwise converted into JSON, and then set as the timezoneData option passed to the plugin.
 
