@@ -39,6 +39,8 @@ $.fn.timezoneWidget = function (options) {
 			tzObj.regSelect.change(function () {
 				tzObj.selectedRegion = $(this).val();
 
+				optz.onRegionSelect(tzObj.selectedRegion);
+
 				tzObj.elem.find(".tz_timezone_container").html("");
 				tzObj.tzSelect = $("<select data-placeholder='Select a timezone...'/>").append("<option value=''/>").addClass('tz_timezone_select');
 
@@ -64,6 +66,9 @@ $.fn.timezoneWidget = function (options) {
 					tzObj.selectedTimezone = $(this).val();
 					$("#" + opts.tzField).val(tzObj.selectedTimezone);
 					$("#" + opts.regionField).val(tzObj.selectedRegion);
+
+					optz.onRegionSelect(tzObj.selectedTimezone, 
+						tzObj.selectedRegion);
 				});
 			});
 
