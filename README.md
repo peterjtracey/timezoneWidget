@@ -1,5 +1,7 @@
 # timezoneWidget
-This is a jQuery plugin with corresponding server code (currently PHP only) which draws a timezone selection widget. The javascript code is around 100 lines, the server class in PHP is around 150 including generating the JSON timezone data, validating submitted timezones, and a helper to get a region for a timezone name (from the DateTimeZone PHP class). 
+This is a jQuery plugin with corresponding server code (currently PHP only) which draws a timezone selection widget. The plugin has an option (guessUserTimezone, default false) to automatically guess a users timezone). The server class in PHP includes a method generating the JSON timezone data, validating submitted timezones, and a helper to get a region for a timezone name (from the DateTimeZone PHP class). 
+
+Contributions for JSON data generation in other languages are welcome.
 
 It depends on the [Chosen](https://harvesthq.github.io/chosen/ "Chosen jQuery autocomplete plugin") jQuery plugin to make selecting the right timezone very easy.
 
