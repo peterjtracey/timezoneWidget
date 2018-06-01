@@ -53,8 +53,15 @@
 console.log("INIT TZ");
 $("#user_edit_timezone").timezoneWidget({
 	data: window.timezoneData,
-	regionField: 'user_timezone_region',
-	tzField: 'user_timezone',
+	onRegionSelect: function (region) {
+		console.log("onRegionSelect");
+		console.log("REGION: " + region);
+	},
+	onTimezoneSelect: function (region, timezone) {
+		console.log("onTimezoneSelect");
+		console.log("REGION: " + region);
+		console.log("TIMEZONE: " + timezone);
+	},
 	guessUserTimezone: window.guessUserTimezone
 });
 

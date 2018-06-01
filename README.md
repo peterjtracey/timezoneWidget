@@ -24,4 +24,4 @@ Alternatively, instead of passing these options (they have sensible defaults), t
 1. onRegionSelect (passes the region as argument)
 2. onTimezoneSelect (passes the timezone name as first argument, region as second so that this is the only callback that has to be handled)
 
-The plugin is tab friendly so that when a user tabs to the field it focuses the US timezones (this may be made optional in the future, or a region to focus by default).
+The plugin is tab friendly so that when a user tabs to the field it focuses the US timezones. Alternatively, the defaultRegion option can be passed to change the default.

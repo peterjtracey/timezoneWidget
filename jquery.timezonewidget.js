@@ -20,8 +20,10 @@ $.fn.timezoneWidget = function (options) {
 		selectedTimezone: '',
 		userClickedRegion: false,
 		draw: function () {
-			tzObj.selectedTimezone = $("#" + opts.tzField).val();
-			tzObj.selectedRegion = $("#" + opts.regionField).val();
+			if ($("#" + opts.tzField).length > 0) {
+				tzObj.selectedTimezone = $("#" + opts.tzField).val();
+				tzObj.selectedRegion = $("#" + opts.regionField).val();
+			}
 			if ($("#" + opts.regionField).length &&
 				tzObj.selectedRegion.length > 0) {
 				tzObj.selectedRegion = parseInt(tzObj.selectedRegion);
@@ -75,21 +77,29 @@ $.fn.timezoneWidget = function (options) {
 				tzObj.selectedRegion = parseInt($(this).val());
 
 				tzObj.elem.find(".tz_timezone_container").html("");
-				tzObj.tzSelect = $("<select data-placeholder='Select a timezone...'/>").append("<option value=''/>").addClass('tz_timezone_select');
+				tzObj.tzSelect = $(
+						"<select data-placeholder='Select a timezone...'/>"
+					).append(
+						"<option value=''/>"
+						).addClass(
+						'tz_timezone_select'
+						);
 
-				tzObj.getZones(tzObj.selectedRegion, function (label, offsetLabel) {
-					tzObj.tzSelect.append(
-						$("<option/>").val(
-							label
-						).text(
-							offsetLabel + " " + 
-							label.split('/')[1].replace(/_/g, " ")
-						)
-					);
+				tzObj.getZones(function (label, offsetLabel) {
+						var parts = label.split(/\//);
+						tzObj.tzSelect.append(
+							$("<option/>").val(
+								label
+							).text(
+								offsetLabel + " " + 
+								parts[1].replace(/_/g, " ") +
+								((parts.length > 2) ? "/" + parts[2] : "")
+							)
+						);
 				});
 
 				if (tzObj.selectedTimezone.length > 0) {
-					tzObj.tzSelect.val(tzObj.selectedTimezone);		
+					tzObj.tzSelect.val(tzObj.selectedTimezone);
 				}
 
 				tzObj.elem.find(".tz_timezone_container").html(tzObj.tzSelect);
@@ -99,7 +109,18 @@ $.fn.timezoneWidget = function (options) {
 					tzObj.selectedTimezone = $(this).val();
 					$("#" + opts.tzField).val(tzObj.selectedTimezone);
 					$("#" + opts.regionField).val(tzObj.selectedRegion);
+					opts.onTimezoneSelect(tzObj.selectedRegion, tzObj.selectedTimezone);
 				});
+
+				if (tzObj.selectedTimezone.length > 0) {
+					if (tzObj.tzSelect.val() != null) {
+						tzObj.tzSelect.trigger('change');
+					} else {
+						opts.onRegionSelect(tzObj.selectedRegion);
+					}
+				} else {
+					opts.onRegionSelect(tzObj.selectedRegion);
+				}
 			});
 
 			if (tzObj.selectedRegion > 0) {
@@ -111,7 +132,6 @@ $.fn.timezoneWidget = function (options) {
 				})
 
 				tzObj.regSelect.focus(function () {
-					console.log(tzObj.userClickedRegion);
 					if (!tzObj.userClickedRegion) {
 						tzObj.elem.find(".tz_timezone_select+div").trigger('mousedown');
 						tzObj.userClickedRegion = false;
@@ -133,7 +153,7 @@ $.fn.timezoneWidget = function (options) {
 			});
 			return found;
 		},
-		getZones: function (selectedRegion, callback) {
+		getZones: function (callback) {
 			$.each(opts.tz, function (key, itRegion) {
 				if (itRegion.id == tzObj.selectedRegion) {
 					$.each(itRegion.timezones, function (key, itTimezone) {
