@@ -11,7 +11,7 @@ For a quick look at the widget a screenshot is included in the root of the repos
 
 ![Screenshot](https://github.com/peterjtracey/timezoneWidget/blob/master/timezonewidgetscreenshot.png?raw=true "Screenshot")
 
-A minimal demo (working sample) page is included as demo.html. That page can be viewed [here](https://peterjtracey.github.io/timezoneWidget//demo.html "Demo of JQuery Timezone Widget")
+A minimal demo (working sample) page is included as demo.html. That page can be viewed [here](https://peterjtracey.github.io/timezoneWidget/demo.html "Demo of JQuery Timezone Widget")
 
 ## Usage
 
