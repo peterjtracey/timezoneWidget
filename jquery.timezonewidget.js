@@ -40,7 +40,7 @@ $.fn.timezoneWidget = function (options) {
 						if (offset.length == 9) {
 							var found = false;
 							$.each(opts.tz, function (key, itRegion) {
-								var found = tzObj.findOffset();
+								var found = tzObj.findOffset(itRegion, offset);
 								if (found) return false;
 							});
 						} else {
@@ -77,7 +77,7 @@ $.fn.timezoneWidget = function (options) {
 				tzObj.elem.find(".tz_timezone_container").html("");
 				tzObj.tzSelect = $("<select data-placeholder='Select a timezone...'/>").append("<option value=''/>").addClass('tz_timezone_select');
 
-				tzObj.getZones(function (label, offsetLabel) {
+				tzObj.getZones(tzObj.selectedRegion, function (label, offsetLabel) {
 					tzObj.tzSelect.append(
 						$("<option/>").val(
 							label
@@ -119,12 +119,12 @@ $.fn.timezoneWidget = function (options) {
 				});
 			}
 		},
-		findOffset: function (offset) {
+		findOffset: function (region, offset) {
 			var found = false;
-			$.each(itRegion.timezones, function (key, itTimezone) {
+			$.each(region.timezones, function (key, itTimezone) {
 				$.each(itTimezone.labels, function (key, itLabel) {
 					if (itTimezone.offsetLabel.indexOf(offset) != -1) {
-						tzObj.selectedRegion = itRegion.id;
+						tzObj.selectedRegion = region.id;
 						tzObj.selectedTimezone = itLabel;
 						found = true;
 						return false;
