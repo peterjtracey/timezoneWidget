@@ -31,7 +31,7 @@ $.fn.timezoneWidget = function (options) {
 					var offset = userTime + "";
 					offset = offset.split(/GMT/);
 					if (offset.length > 0) {
-						offset = offset[1].split(" ");
+						offset = offset[1].split(/ /);
 						offset = offset[0];
 						if (offset.length == 5) {
 							offset = "UTC" + offset.substring(0, 3) + 
@@ -40,18 +40,7 @@ $.fn.timezoneWidget = function (options) {
 						if (offset.length == 9) {
 							var found = false;
 							$.each(opts.tz, function (key, itRegion) {
-								var found = false;
-								$.each(itRegion.timezones, function (key, itTimezone) {
-									$.each(itTimezone.labels, function (key, itLabel) {
-										if (itTimezone.offsetLabel.indexOf(offset) != -1) {
-											tzObj.selectedRegion = itRegion.id;
-											tzObj.selectedTimezone = itLabel;
-											found = true;
-											return false;
-										}
-									});
-									if (found) return false;
-								});
+								var found = tzObj.findOffset();
 								if (found) return false;
 							});
 						} else {
@@ -88,22 +77,15 @@ $.fn.timezoneWidget = function (options) {
 				tzObj.elem.find(".tz_timezone_container").html("");
 				tzObj.tzSelect = $("<select data-placeholder='Select a timezone...'/>").append("<option value=''/>").addClass('tz_timezone_select');
 
-				$.each(opts.tz, function (key, itRegion) {
-					if (itRegion.id == tzObj.selectedRegion) {
-						$.each(itRegion.timezones, function (key, itTimezone) {
-							$.each(itTimezone.labels, function (key, itLabel) {
-								tzObj.tzSelect.append(
-									$("<option/>").val(
-										itLabel
-									).text(
-										itTimezone.offsetLabel + " " + 
-										itLabel.split('/')[1].replace(/_/g, " ")
-									)
-								);
-							});
-						});
-						return false;
-					}
+				tzObj.getZones(function (label, offsetLabel) {
+					tzObj.tzSelect.append(
+						$("<option/>").val(
+							label
+						).text(
+							offsetLabel + " " + 
+							label.split('/')[1].replace(/_/g, " ")
+						)
+					);
 				});
 
 				if (tzObj.selectedTimezone.length > 0) {
@@ -136,6 +118,32 @@ $.fn.timezoneWidget = function (options) {
 					}						
 				});
 			}
+		},
+		findOffset: function (offset) {
+			var found = false;
+			$.each(itRegion.timezones, function (key, itTimezone) {
+				$.each(itTimezone.labels, function (key, itLabel) {
+					if (itTimezone.offsetLabel.indexOf(offset) != -1) {
+						tzObj.selectedRegion = itRegion.id;
+						tzObj.selectedTimezone = itLabel;
+						found = true;
+						return false;
+					}
+				});
+			});
+			return found;
+		},
+		getZones: function (selectedRegion, callback) {
+			$.each(opts.tz, function (key, itRegion) {
+				if (itRegion.id == tzObj.selectedRegion) {
+					$.each(itRegion.timezones, function (key, itTimezone) {
+						$.each(itTimezone.labels, function (key, itLabel) {
+							callback(itLabel, itTimezone.offsetLabel);
+						});
+					});
+					return false;
+				}
+			});
 		}
 	} 
 
