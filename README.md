@@ -1,5 +1,5 @@
 # timezoneWidget
-This is a jQuery plugin with corresponding server code (currently PHP only) which draws a timezone selection widget. The plugin has an option (guessUserTimezone, default false) to automatically guess a users timezone). The server class in PHP includes a method generating the JSON timezone data, validating submitted timezones, and a helper to get a region for a timezone name (from the DateTimeZone PHP class). 
+This is a jQuery plugin with corresponding server code (currently PHP only) which draws a timezone selection widget. The plugin has an option (guessUserTimezone, default false) to automatically guess a user's timezone. The server class in PHP includes a method generating the JSON timezone data, validating submitted timezones, and a helper to get a region for a timezone name (from the DateTimeZone PHP class). 
 
 Contributions for JSON data generation in other languages are welcome.
 
@@ -7,8 +7,11 @@ It depends on the [Chosen](https://harvesthq.github.io/chosen/ "Chosen jQuery au
 
 It is designed to be very simple and intuitive, an emphasis has been made to make it especially useful to users in the United States. However, it is very easy to find any timezone in the world.
 
-In lieu of a demo a screenshot is included in the root of the repository.
+For a quick look at the widget a screenshot is included in the root of the repository. 
+
 ![Screenshot](https://github.com/peterjtracey/timezoneWidget/blob/master/timezonewidgetscreenshot.png?raw=true "Screenshot")
+
+A minimal demo (working sample) page is included as demo.html. That page can be viewed [here](http://www.unlocktc.com/timezoneWidget/demo.html "Demo of JQuery Timezone Widget")
 
 ## Usage
 

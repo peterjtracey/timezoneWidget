@@ -39,23 +39,27 @@ $.fn.timezoneWidget = function (options) {
 						}
 						if (offset.length == 9) {
 							var found = false;
-							for (var i=0; i<opts.tz.length && !found; i++) {
-									for (var j=0; j<opts.tz[i].timezones.length && !found; j++) {
-										for (var k=0; k<opts.tz[i].timezones[j].labels.length && !found; k++) {							
-											if (opts.tz[i].timezones[j].offsetLabel.indexOf(offset) != -1) {
-												tzObj.selectedRegion = opts.tz[i].id;
-												tzObj.selectedTimezone = opts.tz[i].timezones[j].labels[k];
-												found = true;
-											}
+							$.each(opts.tz, function (key, itRegion) {
+								var found = false;
+								$.each(itRegion.timezones, function (key, itTimezone) {
+									$.each(itTimezone.labels, function (key, itLabel) {
+										if (itTimezone.offsetLabel.indexOf(offset) != -1) {
+											tzObj.selectedRegion = itRegion.id;
+											tzObj.selectedTimezone = itLabel;
+											found = true;
+											return false;
 										}
-									}
-								}
-							}
+									});
+									if (found) return false;
+								});
+								if (found) return false;
+							});
 						} else {
 							if (opts.defaultRegion) {
 								tzObj.selectedRegion = opts.defaultRegion;
 							}
 						}
+					}
 				} else {
 					if (opts.defaultRegion) {
 						tzObj.selectedRegion = opts.defaultRegion;
@@ -63,37 +67,44 @@ $.fn.timezoneWidget = function (options) {
 				}
 			}
 
-			tzObj.regSelect = $("<select/>").attr('size', opts.tz.length).addClass('tz_region_select');
+			tzObj.regSelect = $("<select/>").attr(
+				'size', 
+				opts.tz.length
+				).addClass('tz_region_select');
 
-			for (var i=0; i<opts.tz.length; i++) {
-				tzObj.regSelect.append($("<option/>").val(opts.tz[i].id).text(opts.tz[i].label));
-			}			
+			$.each(opts.tz, function (key, region) {
+				tzObj.regSelect.append(
+					$("<option/>").val(
+						region.id
+						).text(region.label));
+			});
 
 			tzObj.elem.append(tzObj.regSelect);
 			tzObj.elem.append($("<div/>").addClass("tz_timezone_container"));
 
 			tzObj.regSelect.change(function () {
-				tzObj.selectedRegion = $(this).val();
+				tzObj.selectedRegion = parseInt($(this).val());
 
 				tzObj.elem.find(".tz_timezone_container").html("");
 				tzObj.tzSelect = $("<select data-placeholder='Select a timezone...'/>").append("<option value=''/>").addClass('tz_timezone_select');
 
-				for (var i=0; i<opts.tz.length; i++) {
-					if (opts.tz[i].id == parseInt($(this).val())) {
-						for (var j=0; j<opts.tz[i].timezones.length; j++) {
-							for (var k=0; k<opts.tz[i].timezones[j].labels.length; k++) {
+				$.each(opts.tz, function (key, itRegion) {
+					if (itRegion.id == tzObj.selectedRegion) {
+						$.each(itRegion.timezones, function (key, itTimezone) {
+							$.each(itTimezone.labels, function (key, itLabel) {
 								tzObj.tzSelect.append(
 									$("<option/>").val(
-										opts.tz[i].timezones[j].labels[k]
+										itLabel
 									).text(
-										opts.tz[i].timezones[j].offsetLabel + " " + 
-										opts.tz[i].timezones[j].labels[k].split('/')[1].replace(/_/g, " ")
+										itTimezone.offsetLabel + " " + 
+										itLabel.split('/')[1].replace(/_/g, " ")
 									)
 								);
-							}
-						}
-					}					
-				}
+							});
+						});
+						return false;
+					}
+				});
 
 				if (tzObj.selectedTimezone.length > 0) {
 					tzObj.tzSelect.val(tzObj.selectedTimezone);		
