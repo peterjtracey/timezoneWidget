@@ -87,7 +87,7 @@ Once you have stored the selected timezone value, you can look at the [Users.php
 // timezonedata.php is included in the PHP sample code
 // it is recommended to host it on your own server, as this
 // url may become inactive
-$.get('http://www.unlocktc.com/timezoneWidget/server/php/timezonedata.php', function (tzData) { 
+$.get('https://www.unlocktc.com/timezoneWidget/server/php/timezonedata.php', function (tzData) { 
 	$("#user_edit_timezone").timezoneWidget({
 		data: tzData,
 		onRegionSelect: function (region) {
