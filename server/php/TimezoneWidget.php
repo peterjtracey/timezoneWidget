@@ -1,5 +1,8 @@
 <?php
-
+/*
+TimezoneWidget.php - LGPL license
+https://github.com/peterjtracey/timezoneWidget
+*/
 class TimezoneWidget {
 
     const TZ_REGIONS = array(

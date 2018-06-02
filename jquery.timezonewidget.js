@@ -5,11 +5,15 @@ https://github.com/peterjtracey/timezoneWidget
 (function ($) {
 
 $.fn.timezoneWidget = function (options) {
-    var opts = $.extend( {}, $.fn.timezoneWidget.defaults, options );
+  var opts = $.extend( {}, $.fn.timezoneWidget.defaults, options );
 
-    opts.tz = opts.data;
+  if (typeof opts.data == "string") {
+  	opts.data = JSON.parse(opts.data);
+  }
 
-   	var tzObj = {
+  opts.tz = opts.data;
+
+ 	var tzObj = {
 		elem: null,
 		tz: [],
 		regions: [],

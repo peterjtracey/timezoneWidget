@@ -1,5 +1,8 @@
 <?php
-
+/*
+Users.php - provided by timezoneWidget - LGPL license
+https://github.com/peterjtracey/timezoneWidget
+*/
 namespace App\Models;
 
 use Eloquent as Model;
