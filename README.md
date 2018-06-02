@@ -79,10 +79,10 @@ Once you have stored the selected timezone value, you can look at the [Users.php
 <script src="jquery.timezonewidget.min.js"></script>
 
 </html>
+```
 
 
 ### Minimal JavaScript
-```
 ```javascript
 // timezonedata.php is included in the PHP sample code
 // it is recommended to host it on your own server, as this
