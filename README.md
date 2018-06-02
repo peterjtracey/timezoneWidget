@@ -25,3 +25,5 @@ Alternatively, instead of passing these options (they have sensible defaults), t
 2. onTimezoneSelect (passes the timezone name as first argument, region as second so that this is the only callback that has to be handled)
 
 The plugin is tab friendly so that when a user tabs to the field it focuses the US timezones. Alternatively, the defaultRegion option can be passed to change the default.
+
+Once you have stored the selected timezone value, you can look at the [Users.php](https://github.com/peterjtracey/timezoneWidget/blob/master/server/php/Users.php) class to get an idea of how to easily convert dates to the user's local time. This PHP example, as opposed to the more generic timezone utility class, uses Laravel's Eloquent database model class. Anyone is welcome to contribute examples for other languages and ORM libraries.
