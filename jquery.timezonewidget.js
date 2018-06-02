@@ -182,8 +182,8 @@ $.fn.timezoneWidget.defaults = {
 	data: null,
 	defaultRegion: 1024,
 	guessUserTimezone: false,
-    onRegionSelect : function() {},
-    onTimezoneSelect : function() {}
+    onRegionSelect : $.noop(),
+    onTimezoneSelect : $.noop()
 };
 
 })(jQuery);
