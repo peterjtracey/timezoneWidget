@@ -15,7 +15,7 @@ A minimal demo (working sample) page is included as demo.html. That page can be 
 
 ## Usage
 
-Include the JavaScript, CSS, Chosen plugin on a page (plugin must come after jQuery). The data structure can be seen in the PHP file, if not using PHP an equivilant data structure must be generated. Internationalization can be added since the labels of the select all come from the JSON data. The PHP class's timezoneValues() method can be passed to the built-in json_encode function or otherwise converted into JSON, and then set as the timezoneData option passed to the plugin.
+Include the JavaScript, CSS, Chosen plugin on a page (plugin must come after jQuery). The data structure can be seen in the [PHP file](https://github.com/peterjtracey/timezoneWidget/blob/master/server/php/TimezoneWidget.php), if not using PHP an equivilant data structure must be generated. Internationalization can be added since the labels of the select all come from the JSON data. The PHP class's timezoneValues() method can be passed to the built-in json_encode function or otherwise converted into JSON, and then set as the timezoneData option passed to the plugin.
 
 There are a few ways to get the timezone values back. The easiest is to have two hidden fields, for region (currently the PHP DateTimeZone region constants) and timezone name (also the literal PHP values for timezones). Values for the id attributes of these fields can be set via the regionField and tzField options respectively. These fields will be populated when a user selects a region or timezone.
 
