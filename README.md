@@ -33,6 +33,9 @@ Once you have stored the selected timezone value, you can look at the [Users.php
 ## Example Code
 
 ### Minimal HTML
+
+Note: use of bootstrap is actually optional
+
 ```
 <!DOCTYPE html>
 <html>
@@ -59,14 +62,14 @@ Once you have stored the selected timezone value, you can look at the [Users.php
 	<input type="hidden" name="user_timezone_region" id="user_timezone_region"/>
   <input type="hidden" name="user_timezone" id="user_timezone"/>
 	<div class="container">
-		<div class="col-sm-3"></div>
-		<div class="form-group col-sm-6">
+		<div class="hidden-sm col-md-2"></div>
+		<div class="form-group col-sm-12 col-md-8">
 			<label for="user_timezone">Timezone:</label>
 	    <br/><br/>
 			<!-- this holds the timezone widget -->
 	    <div id="user_edit_timezone"></div>
 		</div>
-		<div class="col-sm-3"></div>
+		<div class="hidden-sm col-md-2"></div>
 	</div>
 </body>
 
@@ -83,6 +86,8 @@ Once you have stored the selected timezone value, you can look at the [Users.php
 
 
 ### Minimal JavaScript
+
+<strong>Using Events (most powerful)</strong>
 ```javascript
 // timezonedata.php is included in the PHP sample code
 // it is recommended to host it on your own server, as this
@@ -99,6 +104,18 @@ $.get('https://www.unlocktc.com/timezoneWidget/server/php/timezonedata.php', fun
 			console.log("REGION: " + region);
 			console.log("TIMEZONE: " + timezone);
 		},
+		guessUserTimezone: true // default is false
+	});
+});
+```
+
+<strong>Populate Hidden Fields (easiest)</strong>
+```javascript
+$.get('https://www.unlocktc.com/timezoneWidget/server/php/timezonedata.php', function (tzData) { 
+	$("#user_edit_timezone").timezoneWidget({
+		data: tzData,
+		regionField: 'user_timezone_region',
+		tzField: 'user_timezone',
 		guessUserTimezone: true // default is false
 	});
 });
