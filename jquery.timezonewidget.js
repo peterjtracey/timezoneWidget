@@ -82,7 +82,8 @@ $.fn.timezoneWidget = function (options) {
 
 				tzObj.elem.find(".tz_timezone_container").html("");
 				tzObj.tzSelect = $(
-						"<select data-placeholder='Select a timezone...'/>"
+						"<select data-placeholder='" +
+						opts.langSelectTZ + "'/>"
 					).append(
 						"<option value=''/>"
 						).addClass(
@@ -186,8 +187,9 @@ $.fn.timezoneWidget.defaults = {
 	data: null,
 	defaultRegion: 1024,
 	guessUserTimezone: false,
-    onRegionSelect : $.noop(),
-    onTimezoneSelect : $.noop()
+  onRegionSelect : $.noop(),
+  onTimezoneSelect : $.noop(),
+  langSelectTZ : "Select a timezone..."
 };
 
 })(jQuery);
