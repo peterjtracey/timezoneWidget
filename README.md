@@ -9,7 +9,7 @@ It depends on the [Chosen](https://harvesthq.github.io/chosen/ "Chosen jQuery au
 
 It is designed to be very simple and intuitive, an emphasis has been made to make it especially useful to users in the United States. However, it is very easy to find any timezone in the world. 
 
-A demo (working sample) page is included as [demo-widget.html](https://peterjtracey.github.io/timezoneWidget/demo.html "Minimal Demo of JQuery Timezone Widget")
+A demo (working sample) page is included as [demo-widget.html](https://peterjtracey.github.io/timezoneWidget/demo-widget.html "Minimal Demo of JQuery Timezone Widget")
 and is the best way to go about implementing in a site or application.
 
 A picture is worth a thousand words (or clicks of the demo link). 
