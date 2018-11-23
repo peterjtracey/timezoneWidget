@@ -27,11 +27,16 @@
 	<h3>Plugin Minimal Demo</h3>
 	<hr/>
 			</div>
-			<div class="col-sm-3">
+		</div>
+		<div class="row">
+			<div class="col-sm-12">	
+				<hr/>
+	<a href="demo-widget.html">Full Widget Demo</a>
+				| 
 				<a href="https://github.com/peterjtracey/timezoneWidget">GitHub Project - jQuery timezoneWidget</a>
 
 
-			</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -59,7 +64,7 @@
 <!-- chosen -->
 <script src="chosen/chosen.jquery.min.js" type="text/javascript"></script>
 
-<script src="jquery.timezonewidget.min.js"></script>
+<script src="jquery.timezonewidget.js?v=1242321"></script>
 
 <script>
 $(function () {
@@ -71,10 +76,11 @@ $(function () {
 				console.log("onRegionSelect");
 				console.log("REGION: " + region);
 			},
-			onTimezoneSelect: function (region, timezone) {
+			onTimezoneSelect: function (region, timezone, auto) {
 				console.log("onTimezoneSelect");
 				console.log("REGION: " + region);
 				console.log("TIMEZONE: " + timezone);
+				console.log("GUESSED: " + auto);
 			},
 			guessUserTimezone: true
 		});

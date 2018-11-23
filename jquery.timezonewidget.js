@@ -1,5 +1,6 @@
 /*
-jquery.timezonewidget.js - LGPL license
+jquery.timezonewidget.js - 2.0 - 11/22/2018
+LGPL license
 https://github.com/peterjtracey/timezoneWidget
 */
 (function ($) {
@@ -22,46 +23,131 @@ $.fn.timezoneWidget = function (options) {
 		tzSelect: null,
 		selectedRegion: -1,
 		selectedTimezone: '',
-		userClickedRegion: false,
-		draw: function () {
-			if ($("#" + opts.tzField).length > 0) {
-				tzObj.selectedTimezone = $("#" + opts.tzField).val();
-				tzObj.selectedRegion = $("#" + opts.regionField).val();
+		lastSelectedTimezone: '',
+		userSelectedTimezone: true,
+		translateTimes: function () {
+			$("." + opts.translateClass).each(function () {
+				var trans = $(this);
+				var date = $(this).data("tzwdate");
+				opts.debug(date);
+				if (date && date.length > 0) {
+					date = moment(date + "-00:00");
+				} else {
+					date = moment(new Date());
+				}
+				opts.debug(date);
+				var format = $(this).data("tzwformat");
+				trans.text(
+					moment.tz(
+						date, 
+						tzObj.selectedTimezone
+						).format(
+						format
+						)
+					);
+			});
+		},
+		init: function () {
+			var cookie = false;
+			if (opts.loadCookie) {
+				var cookie = Cookies.getJSON(opts.cookieName);
+				opts.debug("COOKIE");
+				opts.debug(cookie);
 			}
-			if ($("#" + opts.regionField).length &&
-				tzObj.selectedRegion.length > 0) {
-				tzObj.selectedRegion = parseInt(tzObj.selectedRegion);
+			// cookie trumps everything
+			// UNLESS it came from guessing
+			// the users timezone
+			if (cookie && cookie.auto == 0) { 
+				tzObj.selectedTimezone = cookie.tz;
+				tzObj.selectedRegion = cookie.region;
 			} else {
-				if (opts.guessUserTimezone) {
-					var userTime = new Date();
-					var offset = userTime + "";
-					offset = offset.split(/GMT/);
-					if (offset.length > 0) {
-						offset = offset[1].split(/ /);
-						offset = offset[0];
-						if (offset.length == 5) {
-							offset = "UTC" + offset.substring(0, 3) + 
-								":" + offset.substring(3, 6);
-						}
-						if (offset.length == 9) {
-							var found = false;
-							$.each(opts.tz, function (key, itRegion) {
-								var found = tzObj.findOffset(itRegion, offset);
-								if (found) return false;
-							});
-						} else {
-							if (opts.defaultRegion) {
-								tzObj.selectedRegion = opts.defaultRegion;
+				if ($("#" + opts.tzField).length > 0) {
+					tzObj.selectedTimezone = $("#" + opts.tzField).val();
+					tzObj.selectedRegion = $("#" + opts.regionField).val();
+				}
+				if ($("#" + opts.regionField).length &&
+					tzObj.selectedRegion.length > 0) {
+					tzObj.selectedRegion = parseInt(tzObj.selectedRegion);
+				} else {
+					if (opts.guessUserTimezone) {
+						var userTime = new Date();
+						var offset = userTime + "";
+						offset = offset.split(/GMT/);
+						if (offset.length > 0) {
+							offset = offset[1].split(/ /);
+							offset = offset[0];
+							if (offset.length == 5) {
+								offset = "UTC" + offset.substring(0, 3) + 
+									":" + offset.substring(3, 6);
+							}
+							if (offset.length == 9) {
+								var found = false;
+								$.each(opts.tz, function (key, itRegion) {
+									var found = tzObj.findOffset(itRegion, offset);
+									if (found) {
+										tzObj.userSelectedTimezone = false;
+										return false;
+									}
+								});
+							} else {
+								if (opts.defaultRegion) {
+									tzObj.selectedRegion = opts.defaultRegion;
+								}
 							}
 						}
-					}
-				} else {
-					if (opts.defaultRegion) {
-						tzObj.selectedRegion = opts.defaultRegion;
+					} else {
+	  				// should load autoguessed cookie here?
+						if (opts.defaultRegion) {
+							tzObj.selectedRegion = opts.defaultRegion;
+						}
 					}
 				}
 			}
-
+			if (opts.toggleElem) {
+						opts.debug("opts.toggleElem????");
+				var shown = false;
+				$(opts.toggleElem).click(function () {
+					if (shown) {
+						shown = false;
+					} else {
+						opts.debug("SHOWING");
+						// not sure if all this is somewhat
+						// a bug where chosen isn't happy
+						// initializing if not shown
+						if (tzObj.selectedRegion > 0) {
+						opts.debug("SHOWINGselectedRegion");
+							tzObj.regSelect.val(tzObj.selectedRegion);
+							tzObj.regSelect.trigger('change');
+							tzObj.elem.find("div.chosen-container-single").css("width", "100%");
+						}
+						shown = true;
+					}
+				});
+			}
+		},
+		tzSelected: function () {
+			if (opts.toggleElem) {
+				$(opts.toggleElem).find(".tzw-text").text(
+						tzObj.tzSelect.find("option:selected").text().replace(/UTC([\+\-])0/, "$1")
+						);
+			}
+			if (opts.translateClass) {
+				tzObj.translateTimes();
+			}
+			if (opts.storeCookie) {
+				var cookieObj = {
+					'region': tzObj.selectedRegion,
+					'tz': tzObj.selectedTimezone,
+					'auto': !tzObj.userSelectedTimezone
+				};
+				Cookies.set(
+					opts.cookieName, 
+					cookieObj
+						);
+			}
+		},
+		draw: function () {
+			tzObj.elem.append($("<form/>"));
 			tzObj.regSelect = $("<select/>").attr(
 				'size', 
 				opts.tz.length
@@ -74,8 +160,8 @@ $.fn.timezoneWidget = function (options) {
 						).text(region.label));
 			});
 
-			tzObj.elem.append(tzObj.regSelect);
-			tzObj.elem.append($("<div/>").addClass("tz_timezone_container"));
+			tzObj.elem.find('form').append(tzObj.regSelect);
+			tzObj.elem.find('form').append($("<div/>").addClass("tz_timezone_container"));
 
 			tzObj.regSelect.change(function () {
 				tzObj.selectedRegion = parseInt($(this).val());
@@ -111,10 +197,19 @@ $.fn.timezoneWidget = function (options) {
 				tzObj.elem.find(".tz_timezone_select").chosen();
 
 				tzObj.elem.find(".tz_timezone_select").change(function () {
-					tzObj.selectedTimezone = $(this).val();
+					console.log("change111");
+					if (tzObj.lastSelectedTimezone == $(this).val()) {
+						return;
+					}
+					tzObj.lastSelectedTimezone = tzObj.selectedTimezone = $(this).val();
 					$("#" + opts.tzField).val(tzObj.selectedTimezone);
 					$("#" + opts.regionField).val(tzObj.selectedRegion);
-					opts.onTimezoneSelect(tzObj.selectedRegion, tzObj.selectedTimezone);
+					tzObj.tzSelected();
+					opts.onTimezoneSelect(
+						tzObj.selectedRegion, 
+						tzObj.selectedTimezone,
+						!tzObj.userSelectedTimezone
+						);
 				});
 
 				if (tzObj.selectedTimezone.length > 0) {
@@ -127,34 +222,27 @@ $.fn.timezoneWidget = function (options) {
 					opts.onRegionSelect(tzObj.selectedRegion);
 				}
 			});
-
+			opts.debug("REGION????" + tzObj.selectedRegion);
 			if (tzObj.selectedRegion > 0) {
 				tzObj.regSelect.val(tzObj.selectedRegion);
-				tzObj.regSelect.change();
-
-				tzObj.regSelect.hover(function () {
-					tzObj.userClickedRegion = true;
-				})
-
-				tzObj.regSelect.focus(function () {
-					if (!tzObj.userClickedRegion) {
-						tzObj.elem.find(".tz_timezone_select+div").trigger('mousedown');
-						tzObj.userClickedRegion = false;
-					}						
-				});
+				tzObj.regSelect.trigger('change');
 			}
+			tzObj.tzSelect.trigger('change');
 		},
 		findOffset: function (region, offset) {
+			opts.debug("FIND OFFSET");
 			var found = false;
 			$.each(region.timezones, function (key, itTimezone) {
 				$.each(itTimezone.labels, function (key, itLabel) {
 					if (itTimezone.offsetLabel.indexOf(offset) != -1) {
 						tzObj.selectedRegion = region.id;
 						tzObj.selectedTimezone = itLabel;
+						opts.debug("GUESSED TIMEZONE");
 						found = true;
-						return false;
+						return false; // break each
 					}
 				});
+				if (found) return false; // break each
 			});
 			return found;
 		},
@@ -164,9 +252,10 @@ $.fn.timezoneWidget = function (options) {
 					$.each(itRegion.timezones, function (key, itTimezone) {
 						$.each(itTimezone.labels, function (key, itLabel) {
 							callback(itLabel, itTimezone.offsetLabel);
+							return false;
 						});
 					});
-					return false;
+					return false; // not found but region is unique so exit
 				}
 			});
 		}
@@ -176,20 +265,47 @@ $.fn.timezoneWidget = function (options) {
 
 	this.addClass('tzwidget');
 
+	tzObj.init();
+
 	tzObj.draw();
 
 	return this;
 };
 
 $.fn.timezoneWidget.defaults = {
+	// load from server or
+	// included js file
+	data: null,
+	// text field ID attributes
+	//  to load values
+	//  from and save values to  
 	regionField: 'tz_region',
 	tzField: 'timezone',
-	data: null,
+	// special region for US,
+	// or set to desired default
 	defaultRegion: 1024,
+	// auto-select user timezone based
+	// on local machine time
 	guessUserTimezone: false,
-  onRegionSelect : $.noop(),
-  onTimezoneSelect : $.noop(),
-  langSelectTZ : "Select a timezone..."
+	// passes region
+  onRegionSelect : $.noop,
+  // passes region, timezone, and
+  // whether auto-selected
+  onTimezoneSelect : $.noop,
+  // placeholder for right-side select
+  langSelectTZ : "Select a timezone...",
+  // display as widget, dropdown ID to
+  // pop-over selection UI
+	toggleElem: null,
+	// see docs...
+	translateClass: null,
+	// persist selected value in browser
+	cookieName: 'jqtzw-selectedtimezone',
+	storeCookie: false,
+	loadCookie: false,
+	// set to console.log passed value
+	// for useful info for modifications 
+	debug: $.noop
 };
 
 })(jQuery);

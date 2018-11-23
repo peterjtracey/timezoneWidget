@@ -11,7 +11,28 @@ For a quick look at the widget a screenshot is included in the root of the repos
 
 ![Screenshot](https://github.com/peterjtracey/timezoneWidget/blob/master/timezonewidgetscreenshot.png?raw=true "Screenshot")
 
-A minimal demo (working sample) page is included as demo.html. That page can be viewed [here](https://peterjtracey.github.io/timezoneWidget/demo.html "Demo of JQuery Timezone Widget")
+A minimal demo (working sample) page is included as demo.html. That page can be viewed [here](https://peterjtracey.github.io/timezoneWidget/demo.html "Minimal Demo of JQuery Timezone Widget")
+
+A demo (working sample page) of the full widget functionality is included as demo-widget.html. That page can be viewed [here](https://peterjtracey.github.io/timezoneWidget/demo.html "Full Demo of JQuery Timezone Widget")
+
+## New in Version 2.0
+
+Now has a true "widget" mode where a dropdown with the current time and auto-selected current timezone are displayed. When selected the widget appears allowing quick switching of timezones should the automatic selection or loaded value not be accurate.
+
+Beyond that, integration has been started with moment-timezone.js - so that any dates displayed on the page can be adjusted according to the user's selected timezone. This comes from a suggestion by [github user nathanv](https://github.com/nathanv).
+
+To go along with widget mode, there is an expirimental new feature - by
+setting the option: 
+```
+			translateClass: 'tzw-translate',
+```
+when elements having that class are encountered, the pair of "data" values seen here can be used to automatically adjust the date display: 
+```
+  <span class="tzw-translate" data-tzwdate="2018-01-01T01:11:00" data-tzwformat="h:mmA">1/18/2018 11:00am</td>
+```
+An empty tzwdate value will adjust the current browser's time to the selected timezone. Not all that useful. The real value is when server-stored dates are output, by simply adding these two attributes all of those dates can be transformed to a user's local time on the client, "automagically" - on the fly!
+
+To elimate the need for server-side storing of timezone values, storeCookie and loadCookie options are available, where the value a user selected will be persisted.
 
 ## Usage
 

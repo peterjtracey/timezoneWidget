@@ -1,9 +1,48 @@
-
+#user_edit_timezone {
+	width: 320px;
+}
 .tzwidget .tz_timezone_container {
-	width: 70%;
+	width: 60%;
 	float: right;
 }
-
+.tzwidget .tz_timezone_container select {
+	width: 100%;
+}
+.tzwidget  div.chosen-container-single {
+	min-width: 100%;
+}
 .tzwidget .tz_region_select {
 	overflow-y: hidden;
+}
+#tzw-toggler {
+	font-size: 1.5em;
+	float: right;
+	border: #000 2px solid;
+	border-radius: 8px;
+	margin-top: 4px;
+	vertical-align: middle;
+}
+
+#tzw-toggler span.tzw-icon {
+	display: block;
+	float: left;
+	margin-right: 8px;
+}
+#tzw-toggler span.tzw-translate {
+	padding-right: 4px;
+	margin-right: 4px;
+	display: inline-block;
+	border-right: #000 2px solid;
+	float: left;
+}
+#tzw-toggler span.tzw-text {
+	display: inline-block;
+	text-align: left;
+	height: 100%;
+	float: left;
+}
+#tzw-toggler span.tzw-down {
+	display: block;
+	float: right;
+	margin-left: 8px;
 }
