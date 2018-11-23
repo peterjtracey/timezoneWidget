@@ -27,8 +27,9 @@ $.fn.timezoneWidget = function (options) {
 		userSelectedTimezone: true,
 		translateTimes: function () {
 			$("." + opts.translateClass).each(function () {
-				var trans = $(this);
-				var date = $(this).data("tzwdate");
+			var trans = $(this);
+			var translateElem = function () {
+				var date = trans.data("tzwdate");
 				opts.debug(date);
 				if (date && date.length > 0) {
 					date = moment(date + "-00:00");
@@ -36,7 +37,7 @@ $.fn.timezoneWidget = function (options) {
 					date = moment(new Date());
 				}
 				opts.debug(date);
-				var format = $(this).data("tzwformat");
+				var format = trans.data("tzwformat");
 				trans.text(
 					moment.tz(
 						date, 
@@ -45,7 +46,27 @@ $.fn.timezoneWidget = function (options) {
 						format
 						)
 					);
-			});
+			};
+			translateElem();
+			var track = trans.data('tzwtrack');
+			var alreadyTracked = trans.data('tzwtracked');
+			var trackElem = trans;
+			var startVal = track;
+			if (!alreadyTracked &&
+				  track && parseInt(track) > 0) { 
+				track = parseInt(track);
+				trans.data('tzwtracked', 1);
+				window.setInterval(function () {
+					console.log("TRACK");
+					translateElem();
+					startVal += track;
+				},
+					track * 1000);
+			}
+		 });
+		},
+		updateTranslateElem: function () {
+
 		},
 		init: function () {
 			var cookie = false;
@@ -305,7 +326,9 @@ $.fn.timezoneWidget.defaults = {
 	loadCookie: false,
 	// set to console.log passed value
 	// for useful info for modifications 
-	debug: $.noop
+	debug: function (val) {
+		console.log(val);
+	}
 };
 
 })(jQuery);

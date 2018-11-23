@@ -17,8 +17,6 @@
 #tzw-toggler {
 	font-size: 1.5em;
 	float: right;
-	border: #000 2px solid;
-	border-radius: 8px;
 	margin-top: 4px;
 	vertical-align: middle;
 }
