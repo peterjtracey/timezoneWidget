@@ -1,12 +1,14 @@
 /*
-jquery.timezonewidget.js - 2.0 - 11/22/2018
+jquery.timezonewidget.js - 2.1 - 11/29/2018
 LGPL license
 https://github.com/peterjtracey/timezoneWidget
 */
 (function ($) {
 
 $.fn.timezoneWidget = function (options) {
-  var opts = $.extend( {}, $.fn.timezoneWidget.defaults, options );
+  var opts = $.extend( {}, 
+  	$.fn.timezoneWidget.defaults, 
+  	options );
 
   if (typeof opts.data == "string") {
   	opts.data = JSON.parse(opts.data);
@@ -17,6 +19,7 @@ $.fn.timezoneWidget = function (options) {
  	var tzObj = {
 		elem: null,
 		tz: [],
+		timers: [],
 		regions: [],
 		timezones: [],
 		regSelect: null,
@@ -25,48 +28,58 @@ $.fn.timezoneWidget = function (options) {
 		selectedTimezone: '',
 		lastSelectedTimezone: '',
 		userSelectedTimezone: true,
+		translateElem: function (trans) {
+			var date = trans.data("tzwdate");
+			opts.debug(date);
+			if (date && date.length > 0) {
+				date = moment(date + "-00:00");
+			} else {
+				date = moment(new Date());
+			}
+			opts.debug(date);
+			var format = trans.data("tzwformat");
+			trans.text(
+				moment.tz(
+					date, 
+					tzObj.selectedTimezone
+					).format(
+					format
+					)
+				);
+			var track = trans.data('tzwtrack');
+			if (track &&
+				  parseInt(track) > 0) {
+				var alreadyTracked = trans.data('tzwtracked');
+				if (!alreadyTracked) { 
+					var trackElem = trans;
+					var startVal = track;
+					track = parseInt(track);
+					trans.data('tzwtracked', 1);
+					// so that times update when 
+					// os clock changes
+					var tmpTimer = window.setTimeout(function () {
+						tzObj.timers[tzObj.timers.length] = 
+							tzObj.translateElem(trans);
+							window.setInterval(function () {
+								console.log("TRACK");
+								tzObj.translateElem(trans);
+								startVal += track;
+							},
+								track * 1000);
+					}, (60 - (new Date()).getSeconds()) * 1000);
+				}
+			}
+		},
+		stopTrack: function () {
+			$.each(this.timers, function (i, timer) {
+				window.clearInterval(timer);
+			});
+		},
 		translateTimes: function () {
 			$("." + opts.translateClass).each(function () {
-			var trans = $(this);
-			var translateElem = function () {
-				var date = trans.data("tzwdate");
-				opts.debug(date);
-				if (date && date.length > 0) {
-					date = moment(date + "-00:00");
-				} else {
-					date = moment(new Date());
-				}
-				opts.debug(date);
-				var format = trans.data("tzwformat");
-				trans.text(
-					moment.tz(
-						date, 
-						tzObj.selectedTimezone
-						).format(
-						format
-						)
-					);
-			};
-			translateElem();
-			var track = trans.data('tzwtrack');
-			var alreadyTracked = trans.data('tzwtracked');
-			var trackElem = trans;
-			var startVal = track;
-			if (!alreadyTracked &&
-				  track && parseInt(track) > 0) { 
-				track = parseInt(track);
-				trans.data('tzwtracked', 1);
-				window.setInterval(function () {
-					console.log("TRACK");
-					translateElem();
-					startVal += track;
-				},
-					track * 1000);
-			}
-		 });
-		},
-		updateTranslateElem: function () {
-
+				var trans = $(this);
+				tzObj.translateElem(trans);
+			});
 		},
 		init: function () {
 			var cookie = false;
@@ -125,7 +138,6 @@ $.fn.timezoneWidget = function (options) {
 				}
 			}
 			if (opts.toggleElem) {
-						opts.debug("opts.toggleElem????");
 				var shown = false;
 				$(opts.toggleElem).click(function () {
 					if (shown) {
@@ -288,8 +300,11 @@ $.fn.timezoneWidget = function (options) {
 
 	tzObj.init();
 
-	tzObj.draw();
+	opts.onInit(tzObj);
 
+	tzObj.draw();
+	
+	
 	return this;
 };
 
@@ -308,6 +323,8 @@ $.fn.timezoneWidget.defaults = {
 	// auto-select user timezone based
 	// on local machine time
 	guessUserTimezone: false,
+	// passes api-ish object
+  onInit : $.noop,
 	// passes region
   onRegionSelect : $.noop,
   // passes region, timezone, and
@@ -326,9 +343,10 @@ $.fn.timezoneWidget.defaults = {
 	loadCookie: false,
 	// set to console.log passed value
 	// for useful info for modifications 
-	debug: function (val) {
+	debug: $.noop
+	/*function (val) {
 		console.log(val);
-	}
+	}*/
 };
 
 })(jQuery);
